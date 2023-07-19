@@ -6,6 +6,7 @@ fetch(endpoint)
     .then(blob => blob.json()) 
     .then(data => cities.push(...data));
 
+
 function findMatches(wordToMatch, cities) {
     return cities.filter(place => {
       // Here we will implement searching for City or States that match ${wordToMatch}
@@ -14,5 +15,30 @@ function findMatches(wordToMatch, cities) {
       return place.city.match(regex)  || place.state.match(regex);  
     })
 }
+
+
+function displayMatches() {
+  const matchArray = findMatches(this.value, cities);
+  
+  const html = matchArray.map(place => {
+    return `
+      <li>
+        <span class="name">${place.city}, ${place.state}</span>
+        <span class="population">${place.population}</span>
+      </li>
+    `;
+  }).join('');  // .join('') will convert the return from an array with lots of items into a single string
+  suggestions.innerHTML = html; // adds the returned html <li> elements and contained content to the .suggestions <ul>
+}
+
+
+  // Access the HTML search field and suggestions <ul> element
+const searchInput = document.querySelector('.search');
+const suggestions = document.querySelector('.suggestions');
+
+  // Add 2 types of event listener to the searchInput (class="search") field, that will update the suggestions displayed,
+  // by calling the displayMatches function
+searchInput.addEventListener('change', displayMatches);
+searchInput.addEventListener('keyup', displayMatches);
 
 
