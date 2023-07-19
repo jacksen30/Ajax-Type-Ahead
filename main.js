@@ -16,15 +16,26 @@ function findMatches(wordToMatch, cities) {
     })
 }
 
+// Can be used to convert a number to be comma deliniated number correctly, uses a regex expression
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 
 function displayMatches() {
   const matchArray = findMatches(this.value, cities);
   
   const html = matchArray.map(place => {
+    const regex = new RegExp(this.value, 'gi'); //g is for global and i is for case-insensitive matching
+    // The .replace() method is used on place.city and place.state to replace occurrences of the input value with a highlighted version
+    // using an HTML <span> element with the class "hl". The replace method takes two arguments: the regular expression (regex) and the replacement string (in this case, the highlighted version of the input value).
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`); 
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    
     return `
       <li>
-        <span class="name">${place.city}, ${place.state}</span>
-        <span class="population">${place.population}</span>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${numberWithCommas(place.population)}</span>
       </li>
     `;
   }).join('');  // .join('') will convert the return from an array with lots of items into a single string
